@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>HeadSync – Professional Head Tracking Sensor</title>
+    <meta name="title" content="HeadSync – Professional Head Tracking Sensor" />
+    <meta name="description" content="Transform your Android device into a precise 6-DOF tracking hub. AI-powered and GPU-accelerated head tracking built for flight, racing, and space sims." />
+    <meta name="keywords" content="head tracking, 6-DOF, OpenTrack, flight simulator, sim racing, Android head tracker, HeadSync" />
+    <meta name="author" content="Rami Hendi" />
+    <meta name="theme-color" content="#0b0d12" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yourwebsite.com/" />
+    <meta property="og:title" content="HeadSync – Professional Head Tracking Sensor" />
+    <meta property="og:description" content="Transform your Android device into a precise 6-DOF tracking hub. AI-powered and GPU-accelerated head tracking built for flight, racing, and space sims." />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="HeadSync – Professional Head Tracking Sensor" />
+    <meta property="twitter:description" content="Transform your Android device into a precise 6-DOF tracking hub. AI-powered and GPU-accelerated head tracking built for flight, racing, and space sims." />
+
+    <!-- Favicon Added Here -->
+    <link rel="icon" type="image/png" href="icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        /* ── reset & base ── */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0b0d12;
+            --bg-secondary: #11141c;
+            --bg-card: #171b26;
+            --bg-card-hover: #1e2332;
+            --border-subtle: #2a3040;
+            --text-primary: #eef2f8;
+            --text-secondary: #9aa5b9;
+            --text-muted: #6b7a93;
+            --accent-cyan: #00d4ff;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-glow: rgba(0, 212, 255, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.6);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+
+        /* ── container ── */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ── header / nav ── */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            background: rgba(11, 13, 18, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(42, 48, 64, 0.4);
+            transition: var(--transition);
+        }
+        
+        /* ── Optimized Scrolled State ── */
+        .navbar.scrolled {
+            background: rgba(11, 13, 18, 0.92);
+            border-bottom-color: rgba(42, 48, 64, 0.6);
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #fff 40%, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-download {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #0b0d12 !important;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            font-size: 0.85rem !important;
+            transition: var(--transition);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .nav-download::after {
+            display: none !important;
+        }
+        .nav-download:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 32px rgba(0, 212, 255, 0.35);
+            color: #0b0d12 !important;
+        }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .mobile-toggle span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        /* ── hero ── */
+        .hero {
+            padding: 140px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.07), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -15%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.06), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+        }
+
+        .hero-content h1 .highlight {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin-bottom: 32px;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 36px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .badge .dot.green {
+            background: #22c55e;
+        }
+        .badge .dot.cyan {
+            background: var(--accent-cyan);
+        }
+        .badge .dot.purple {
+            background: var(--accent-purple);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0b0d12;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.35);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--text-secondary);
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-phone-mockup {
+            width: 100%;
+            max-width: 420px;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(145deg, #1a1f2e, #0f121b);
+            border-radius: 32px;
+            padding: 8px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(0, 212, 255, 0.05);
+            position: relative;
+        }
+
+        .hero-phone-mockup .screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 24px;
+            background: var(--bg-secondary);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .mockup-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .mockup-placeholder .icon-big {
+            font-size: 3.6rem;
+            opacity: 0.5;
+        }
+
+        .mockup-placeholder .glow-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 212, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-ring 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.05);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 212, 255, 0.15);
+            }
+        }
+
+        /* ── section common ── */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.08);
+            padding: 4px 14px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+        }
+
+        .section-title .highlight {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── features / tech core ── */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .tech-card {
+            background: var(--bg-card);
+            padding: 30px 28px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-subtle);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .tech-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(0, 212, 255, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .tech-card:hover::before {
+            opacity: 1;
+        }
+
+        .tech-card .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .tech-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tech-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .tech-card .tag {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.08);
+            padding: 2px 12px;
+            border-radius: 50px;
+        }
+
+        /* ── screenshot gallery ── */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .gallery-item {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            transition: var(--transition);
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            border-color: rgba(0, 212, 255, 0.25);
+            transform: scale(1.02);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-item .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .gallery-item .placeholder .big-icon {
+            font-size: 3.2rem;
+            opacity: 0.4;
+        }
+
+        .gallery-item .placeholder .label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .gallery-item .badge-coming {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* ── setup steps ── */
+        .setup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .setup-col {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 32px 32px 40px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .setup-col h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setup-col h3 .step-badge {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #0b0d12;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 50px;
+        }
+
+        .step-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-list li {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .step-list li .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 26px;
+            height: 26px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            margin-top: 1px;
+        }
+
+        .step-list li strong {
+            color: var(--text-primary);
+        }
+
+        .step-list li code {
+            background: var(--bg-primary);
+            padding: 1px 10px;
+            border-radius: 6px;
+            font-family: 'Inter', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* ── operation ── */
+        .op-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 32px;
+        }
+
+        .op-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 28px 30px;
+            border: 1px solid var(--border-subtle);
+            transition: var(--transition);
+        }
+
+        .op-card:hover {
+            border-color: rgba(0, 212, 255, 0.15);
+        }
+
+        .op-card h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .op-card p,
+        .op-card li {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .op-card ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .op-card ul li::before {
+            content: '▸ ';
+            color: var(--accent-cyan);
+        }
+
+        .op-card .highlight-box {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--accent-cyan);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .op-card .highlight-box strong {
+            color: var(--text-primary);
+        }
+
+        /* ── troubleshooting ── */
+        .trouble-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .trouble-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            padding: 20px 24px;
+            border: 1px solid var(--border-subtle);
+            transition: var(--transition);
+        }
+
+        .trouble-item:hover {
+            border-color: rgba(0, 212, 255, 0.12);
+        }
+
+        .trouble-item h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .trouble-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .trouble-item .fix {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 8px 14px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            border-left: 2px solid var(--accent-cyan);
+        }
+
+        /* ── download CTA ── */
+        .cta-section {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.04), transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section h2 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .cta-section p {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            max-width: 520px;
+            margin: 0 auto 32px;
+        }
+
+        .cta-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 44px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0b0d12;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.35);
+        }
+
+        .btn-download .sub {
+            font-weight: 400;
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        /* ── footer ── */
+        .footer {
+            padding: 40px 0 32px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .footer .socials {
+            display: flex;
+            gap: 18px;
+        }
+
+        .footer .socials a {
+            font-size: 1.2rem;
+            opacity: 0.6;
+            transition: var(--transition);
+        }
+
+        .footer .socials a:hover {
+            opacity: 1;
+            color: var(--accent-cyan);
+        }
+
+        /* ── CSS Classes for Scroll Animation (Optimized) ── */
+        .reveal-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .reveal-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 1024px) {
+            .hero .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-sub {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-badges {
+                justify-content: center;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-phone-mockup {
+                max-width: 350px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .setup-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .op-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trouble-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background: var(--bg-secondary);
+                padding: 20px 28px;
+                border-radius: var(--radius);
+                border: 1px solid var(--border-subtle);
+                position: absolute;
+                top: 72px;
+                right: 24px;
+                min-width: 200px;
+                gap: 16px;
+                box-shadow: var(--shadow-card);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .hero {
+                padding: 120px 0 60px;
+            }
+
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+
+            .gallery-item {
+                aspect-ratio: 16 / 9; /* Keeps landscape on mobile */
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .btn-download {
+                padding: 14px 28px;
+                font-size: 1rem;
+            }
+
+            .footer .container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .gallery-item .placeholder .big-icon {
+                font-size: 2.4rem;
+            }
+
+            .gallery-item .placeholder {
+                font-size: 0.7rem;
+            }
+
+            .hero-phone-mockup {
+                max-width: 220px;
+            }
+
+            .badge {
+                font-size: 0.7rem;
+                padding: 4px 12px;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setup-col {
+                padding: 24px 18px;
+            }
+
+            .op-card {
+                padding: 20px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── NAVBAR ─── -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#home" class="logo">
+                <img src="icon.png" alt="HeadSync Icon" style="width:36px; height:36px; border-radius:10px; object-fit:cover;" />
+                <span>HeadSync</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#screenshots">Screenshots</a></li>
+                <li><a href="#setup">Setup</a></li>
+                <li><a href="#operation">Operation</a></li>
+                <li><a href="#download" class="nav-download">Download</a></li>
+            </ul>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ─── HERO ─── -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badges">
+                    <span class="badge"><span class="dot green"></span> 6-DOF Tracking</span>
+                    <span class="badge"><span class="dot cyan"></span> AI-Powered</span>
+                    <span class="badge"><span class="dot purple"></span> GPU Accelerated</span>
+                </div>
+                <h1>
+                    Professional<br />
+                    <span class="highlight">Head Tracking</span> Sensor
+                </h1>
+                <p class="hero-sub">
+                    Transform your Android device into a precise 6-DOF tracking hub.
+                    Built for simulation gamers — flight, racing, and space sims.
+                </p>
+                <div class="hero-actions">
+                    <a href="#download" class="btn-primary">
+                        ⬇ Download App
+                    </a>
+                    <a href="#setup" class="btn-secondary">
+                        Setup Guide →
+                    </a>
+                </div>
+                <div style="margin-top:28px; display:flex; flex-wrap:wrap; gap:20px; font-size:0.85rem; color:var(--text-muted);">
+                    <span>📱 Android 7.0+</span>
+                    <span>🖥 OpenTrack compatible</span>
+                    <span>⚡ 100% GPU accelerated</span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-phone-mockup">
+                    <div class="screen">
+                        <div class="mockup-placeholder">
+                            <div class="glow-ring">
+                                <span class="icon-big">◉</span>
+                            </div>
+                            <span>HeadSync GUI</span>
+                            <span style="font-size:0.7rem; opacity:0.5;">Landscape preview</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── FEATURES / TECH CORE ─── -->
+    <section id="features" style="background:var(--bg-secondary);">
+        <div class="container">
+            <span class="section-label">⚙ Technical Core</span>
+            <h2 class="section-title">Built on <span class="highlight">SmoothTrack-Standard</span></h2>
+            <p class="section-desc">High-fidelity tracking with AI, GPU acceleration, and professional-grade filtering.</p>
+
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <span class="icon">🧠</span>
+                    <h3>AI Tracking Engine</h3>
+                    <p>Powered by Google MediaPipe, using the Facial Transformation Matrix to extract precise metric data (centimeters and degrees) directly from the face mesh.</p>
+                    <span class="tag">6-DOF</span>
+                </div>
+                <div class="tech-card">
+                    <span class="icon">⚡</span>
+                    <h3>GPU Accelerated</h3>
+                    <p>100% GPU-accelerated tracking ensures maximum frame rates, minimal battery drain, and zero thermal throttling during long gaming sessions.</p>
+                    <span class="tag">Performance</span>
+                </div>
+                <div class="tech-card">
+                    <span class="icon">🛡</span>
+                    <h3>One Euro Filter</h3>
+                    <p>Professional-grade smoothing eliminates high-frequency jitter when your head is still, while providing zero-latency response during rapid movements.</p>
+                    <span class="tag">Stability</span>
+                </div>
+                <div class="tech-card">
+                    <span class="icon">📡</span>
+                    <h3>Foreground Service</h3>
+                    <p>Operates as a Foreground Service. Tracking continues uninterrupted even if the app is minimized, the screen is locked, or the phone goes to sleep.</p>
+                    <span class="tag">Persistence</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SCREENSHOTS ─── -->
+    <section id="screenshots">
+        <div class="container">
+            <span class="section-label">📸 Gallery</span>
+            <h2 class="section-title">App <span class="highlight">Screenshots</span></h2>
+            <p class="section-desc">A preview of the HeadSync interface — clean, real-time, and packed with feedback.</p>
+
+            <div class="gallery-grid">
+                <!-- item 1 -->
+                <div class="gallery-item">
+                    <div class="placeholder">
+                        <span class="big-icon">📱</span>
+                        <span class="label">Face Mesh Overlay</span>
+                        <span style="font-size:0.7rem; opacity:0.6;">Real-time tracking view</span>
+                    </div>
+                    <span class="badge-coming">Screenshot</span>
+                </div>
+                <!-- item 2 -->
+                <div class="gallery-item">
+                    <div class="placeholder">
+                        <span class="big-icon">🎮</span>
+                        <span class="label">Control Panel</span>
+                        <span style="font-size:0.7rem; opacity:0.6;">IP, status &amp; controls</span>
+                    </div>
+                    <span class="badge-coming">Screenshot</span>
+                </div>
+                <!-- item 3 -->
+                <div class="gallery-item">
+                    <div class="placeholder">
+                        <span class="big-icon">📊</span>
+                        <span class="label">FPS &amp; Status</span>
+                        <span style="font-size:0.7rem; opacity:0.6;">Performance monitoring</span>
+                    </div>
+                    <span class="badge-coming">Screenshot</span>
+                </div>
+            </div>
+            <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; margin-top:20px;">
+                Screenshot placeholders — actual app GUI images coming soon.
+            </p>
+        </div>
+    </section>
+
+    <!-- ─── SETUP ─── -->
+    <section id="setup" style="background:var(--bg-secondary);">
+        <div class="container">
+            <span class="section-label">🔧 Setup</span>
+            <h2 class="section-title">Get started in <span class="highlight">minutes</span></h2>
+            <p class="section-desc">Follow these steps to connect HeadSync with OpenTrack on your PC.</p>
+
+            <div class="setup-grid">
+                <!-- PC Side -->
+                <div class="setup-col">
+                    <h3>
+                        <span class="step-badge">PC</span>
+                        OpenTrack Configuration
+                    </h3>
+                    <ul class="step-list">
+                        <li>
+                            <span class="num">1</span>
+                            <span>Launch <strong>OpenTrack</strong> on your PC.</span>
+                        </li>
+                        <li>
+                            <span class="num">2</span>
+                            <span>Set <strong>Input</strong> to <code>UDP over network</code>.</span>
+                        </li>
+                        <li>
+                            <span class="num">3</span>
+                            <span>Click the <strong>Settings</strong> (hammer/wrench icon) next to the Input dropdown.</span>
+                        </li>
+                        <li>
+                            <span class="num">4</span>
+                            <span>Ensure the <strong>Port</strong> is set to <code>4242</code>.</span>
+                        </li>
+                        <li>
+                            <span class="num">5</span>
+                            <span>Click <strong>OK</strong>.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Mobile Side -->
+                <div class="setup-col">
+                    <h3>
+                        <span class="step-badge">Mobile</span>
+                        HeadSync App
+                    </h3>
+                    <ul class="step-list">
+                        <li>
+                            <span class="num">1</span>
+                            <span>Launch HeadSync and grant <strong>Camera Permissions</strong>.</span>
+                        </li>
+                        <li>
+                            <span class="num">2</span>
+                            <span>Mount your phone in <strong>Landscape orientation</strong> facing your head.</span>
+                        </li>
+                        <li>
+                            <span class="num">3</span>
+                            <span>Swipe up the <strong>Retractable Control Panel</strong> from the bottom.</span>
+                        </li>
+                        <li>
+                            <span class="num">4</span>
+                            <span><strong>WiFi:</strong> Enter your PC's IP address in the <code>IP Address</code> field.</span>
+                        </li>
+                        <li>
+                            <span class="num">5</span>
+                            <span><strong>USB (recommended):</strong> Enable USB Tethering, find the new PC IP (usually <code>192.168.42.x</code>), and toggle <strong>USB Mode</strong> in the app.</span>
+                        </li>
+                        <li>
+                            <span class="num">6</span>
+                            <span>Tap <strong>START</strong>.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── OPERATION & CALIBRATION ─── -->
+    <section id="operation">
+        <div class="container">
+            <span class="section-label">🎯 Operation</span>
+            <h2 class="section-title">Calibration &amp; <span class="highlight">Interface</span></h2>
+            <p class="section-desc">Real-time visual feedback, centering, and what to expect.</p>
+
+            <div class="op-grid">
+                <div class="op-card">
+                    <h4>📱 The Interface</h4>
+                    <ul>
+                        <li><strong>Face Mesh Overlay</strong> — real-time visual feedback. Ensure the cyan dots align with your features.</li>
+                        <li><strong>FPS Monitor</strong> — displays the real-time processing speed.</li>
+                        <li><strong>Status Indicator</strong> — shows whether the sensor is Idle or Tracking.</li>
+                    </ul>
+                </div>
+
+                <div class="op-card">
+                    <h4>🎯 Centering (CRITICAL)</h4>
+                    <p>For the most accurate tracking, you must calibrate the "Zero Point":</p>
+                    <ul>
+                        <li>Look directly at your PC monitor in a natural, neutral sitting position.</li>
+                        <li>Tap the <strong>CENTER</strong> button in the app.</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <strong>✔ Done.</strong> The octopus in OpenTrack will snap to the center. HeadSync has now captured your <strong>"Reference Pose"</strong> and will calculate all movements relative to this point.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── TROUBLESHOOTING ─── -->
+    <section id="troubleshooting" style="background:var(--bg-secondary);">
+        <div class="container">
+            <span class="section-label">⚠ Troubleshooting</span>
+            <h2 class="section-title">Quick <span class="highlight">fixes</span></h2>
+            <p class="section-desc">Common issues and how to resolve them.</p>
+
+            <div class="trouble-grid">
+                <div class="trouble-item">
+                    <h4>❌ Octopus is not moving</h4>
+                    <p>No movement in OpenTrack.</p>
+                    <div class="fix">🔹 Check your PC Firewall. Ensure UDP port <code>4242</code> is allowed. <br /> 🔹 Ensure both phone and PC are on the same local network.</div>
+                </div>
+                <div class="trouble-item">
+                    <h4>🔄 Tracking is Reversed</h4>
+                    <p>An axis moves the wrong direction.</p>
+                    <div class="fix">🔹 Use the <strong>Options</strong> tab in <strong>OpenTrack</strong> to <strong>"Invert"</strong> the specific axis. The app is optimized for front-camera use.</div>
+                </div>
+                <div class="trouble-item">
+                    <h4>📴 Connection drops when screen is off</h4>
+                    <p>Tracking stops after locking the phone.</p>
+                    <div class="fix">🔹 Disable <strong>"Battery Optimization"</strong> for HeadSync in your phone's Android Settings. The app includes a WiFi-Lock, but some aggressive battery savers may override it.</div>
+                </div>
+                <div class="trouble-item">
+                    <h4>📶 High latency or stutter</h4>
+                    <p>Tracking feels laggy.</p>
+                    <div class="fix">🔹 Use <strong>USB Tethering</strong> instead of WiFi for lower latency. <br /> 🔹 Ensure no other apps are consuming heavy GPU/CPU resources on your phone.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── DOWNLOAD CTA ─── -->
+    <section id="download" class="cta-section">
+        <div class="container">
+            <span class="section-label" style="background:rgba(0,212,255,0.12); border-color:rgba(0,212,255,0.2);">📥 Download</span>
+            <h2>Ready to <span class="highlight">track</span> like a pro?</h2>
+            <p>Get HeadSync on your Android device and experience rock-solid 6-DOF head tracking.</p>
+            <div class="cta-actions">
+                <a href="#" class="btn-download">
+                    ⬇ Download for Android
+                    <span class="sub">v1.0 • APK</span>
+                </a>
+                <a href="https://github.com/opentrack/opentrack/releases" target="_blank" class="btn-secondary" style="border-color:var(--border-subtle);">
+                    🖥 Get OpenTrack
+                </a>
+            </div>
+            <p style="margin-top:24px; font-size:0.8rem; color:var(--text-muted);">
+                Compatible with Android 7.0+ &bull; Free &bull; OpenTrack protocol
+            </p>
+        </div>
+    </section>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="footer">
+        <div class="container">
+            <p>
+                © 2026 <strong>HeadSync</strong> by Rami Hendi. All rights reserved.
+            </p>
+            <div class="socials">
+                <a href="#" aria-label="GitHub">🐙</a>
+                <a href="#" aria-label="Twitter">🐦</a>
+                <a href="#" aria-label="YouTube">▶</a>
+            </div>
+            <p style="font-size:0.75rem;">
+                Dedicated to the global simulation community.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ─── JAVASCRIPT ─── -->
+    <script>
+        // ─── Mobile nav toggle (Optimized for Accessibility) ───
+        const toggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        toggle.addEventListener('click', () => {
+            const isOpen = navLinks.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', isOpen);
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // ─── Intersection Observer (Optimized using CSS Classes) ───
+        const cards = document.querySelectorAll('.tech-card, .gallery-item, .setup-col, .op-card, .trouble-item');
+
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-visible');
+                    obs.unobserve(entry.target); // Stop observing once revealed
+                }
+            });
+        }, observerOptions);
+
+        cards.forEach((card, i) => {
+            // Set initial hidden state via class
+            card.classList.add('reveal-hidden');
+            // Stagger animations smoothly
+            card.style.transitionDelay = `${i * 0.05}s`;
+            observer.observe(card);
+        });
+
+        // ─── Navbar background on scroll (Optimized with requestAnimationFrame) ───
+        const navbar = document.getElementById('navbar');
+        let isTicking = false;
+
+        window.addEventListener('scroll', () => {
+            if (!isTicking) {
+                window.requestAnimationFrame(() => {
+                    if (window.scrollY > 40) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
+        }, { passive: true }); // Boosts scrolling smoothness on mobile
+    </script>
+
+</body>
+</html>
